@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Post, Param, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Quotes } from "./quotes";
 import { randomInt } from 'crypto';
@@ -49,4 +49,25 @@ export class AppController {
     }
   }
 
+  @Get('quotes/:id')
+  @Render("onequote")
+  oneQuote(@Param('id') id: string) {
+    const quote = Quotes.quotes.find(element => element.id === parseInt(id))  
+    if (quote) {
+      console.log(quote)
+      return { squote: quote }
+    }
+    return { squote: null }
+  }
+
+  @Get('deletequote/:id')
+  @Render("deletequote")
+  deleteQuote(@Param('id') id: string) {
+    if (Quotes.quotes.includes(Quotes.quotes[parseInt(id)-1])) {
+      Quotes.quotes.splice(parseInt(id)-1);
+      return { response: "Sikeres törlés"}
+    } else {
+      return {response: "Nincs ilyen elem"}
+    }
+  }
 }
