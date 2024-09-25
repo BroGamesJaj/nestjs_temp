@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Render } from '@nestjs/common';
+import { Controller, Get, Post, Query, Param, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Quotes } from "./quotes";
 import { randomInt } from 'crypto';
@@ -20,7 +20,7 @@ export class AppController {
   @Render('quotes')
   GetQuotes() {
     return {
-      Quotes
+      Quotes: Quotes
     }
   }
 
@@ -70,4 +70,17 @@ export class AppController {
       return {response: "Nincs ilyen elem"}
     }
   }
+
+  @Get('search')
+  @Render("search")
+  quoteSearch(@Query('search')search : string = " "){
+    let find = [];
+    Quotes.quotes.forEach(quote => {
+      if (quote.quote.toLowerCase().includes(search.toLowerCase())){
+        find.push(quote);
+      }
+    })
+    return {Find: find};
+  }
+
 }
