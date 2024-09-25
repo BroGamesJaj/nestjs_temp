@@ -83,4 +83,34 @@ export class AppController {
     return {Find: find};
   }
 
+  @Get("authorRandomForm")
+  @Render("authorRandomForm")
+  authorRandomForm(){
+  }
+
+  @Get("authorRandom")
+  @Render("authorRandom")
+  authorRandom(@Query('author') author: string){
+    try {
+    let authorQuotes = [];
+    Quotes.quotes.forEach(quote => {
+      if(quote.author.toLowerCase().includes(author.toLowerCase())){
+          authorQuotes.push(quote);
+      }
+    })
+      return {Quote: authorQuotes[randomInt(0, authorQuotes.length)],
+        error: false
+      }
+    }
+    catch{
+      return {error: true}
+    }
+    
+  }
+  
+  @Get("highlight/:id")
+  @Render("highlight")
+  highlight(@Query('szovegreszlet')szovegreszlet: string = "",@Param('id') id: string){
+    return {quote: Quotes.quotes[parseInt(id)-1].quote.replace(new RegExp(szovegreszlet, 'gi'), "<strong>"+szovegreszlet+"</strong>")}
+  }
 }
